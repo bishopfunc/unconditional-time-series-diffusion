@@ -97,7 +97,6 @@ def plot_train_stats(df: pd.DataFrame, y_keys=None, skip_first_epoch=True):
 
 def get_lags_for_freq(freq_str: str):
     offset = to_offset(freq_str)
-    print(f"{offset=}, {offset.n=}, {offset.name=}")
     if offset.n > 1:
         raise NotImplementedError(
             "Lags for freq multiple > 1 are not implemented yet."
