@@ -29,6 +29,8 @@ from uncond_ts_diff.utils import (
     ConcatDataset,
 )
 
+import warnings
+warnings.filterwarnings("ignore")
 
 def create_model(config):
     model = TSDiffCond(

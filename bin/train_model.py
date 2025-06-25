@@ -29,6 +29,8 @@ from uncond_ts_diff.utils import (
     filter_metrics,
     MaskInput,
 )
+import warnings
+warnings.filterwarnings("ignore")
 
 guidance_map = {"ddpm": DDPMGuidance, "ddim": DDIMGuidance}
 
