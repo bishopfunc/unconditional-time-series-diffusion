@@ -11,6 +11,7 @@ source .venv/bin/activate # 仮想環境を有効化
 ```
 
 ### error: distribution `torch==1.13.1 @ registry+https://pypi.org/simple` can't be installed because it doesn't have a source distribution or wheel for the current platform
+- 前提: `python bin/train_model.py -c configs/train_tsdiff/train_uber_tlc.yaml --device cpu`実行時に発生
 - 原因: torchのバージョンが古い
 - 対策:`pyproject.toml`の`requires-python = "==3.9"`に変更
 
@@ -25,6 +26,7 @@ python bin/train_model.py -c configs/train_tsdiff/train_uber_tlc.yaml
 ```
 
 ### NotImplementedError: Lags for H are not implemented yet.
+- 前提: `python bin/train_model.py -c configs/train_tsdiff/train_uber_tlc.yaml --device cpu`実行時に発生
 - 原因: `unconditional-time-series-diffusion/src/uncond_ts_diff/utils.py`の`get_lags_for_freq`の小文字大文字判定のバグ
 - 対策: `get_lags_for_freq`の`freq`の小文字大文字を無視するように修正
 ```python
@@ -65,6 +67,7 @@ def get_lags_for_freq(freq_str: str):
 ```
 
 ### ModuleNotFoundError: No module named 'pykeops_cpp_a7c1d53916'
+- 前提: `python bin/train_model.py -c configs/train_tsdiff/train_uber_tlc.yaml --device cpu`実行時に発生
 - 原因: 同時に`g++ not found`のエラーが出る場合は、それが原因
 - 対策: `sudo apt install -y build-essential`を実行して、`g++`をインストールする。`g++ vesion`を実行して、表示されればOK。
 ```bash
