@@ -1,5 +1,6 @@
+## トラブルシューティング
 ### 環境
-他の実行環境の人は適宜変更してほしい
+個人的には`uv`が一番楽だと思う、他の実行環境でも動くはずなので適宜読み替えてください。
 - 仮想環境 `uv`
 - OS: `Ubuntu 24.04`
 
@@ -44,4 +45,37 @@ def get_lags_for_freq(freq_str: str):
             f"Lags for {freq_str} are not implemented yet."
         )
     return lags_seq
+```
+
+### ValueError: invalid literal for int() with base 10: 'cpu'
+- 前提: `python bin/train_model.py -c configs/train_tsdiff/train_uber_tlc.yaml --device cpu`実行時に発生
+- 原因: `unconditional-time-series-diffusion/bin/train_model.py`の`devices`がGPU前提
+- 対策: `unconditional-time-series-diffusion/bin/train_model.py`と`unconditional-time-series-diffusion/src/uncond_ts_diff/uncond_ts_diff.py`を以下のように修正
+```python
+    trainer = pl.Trainer(
+        accelerator="gpu" if torch.cuda.is_available() else None,
+        devices=[int(config["device"].split(":")[-1])] if "cuda" in config["device"] else None, # 修正
+        max_epochs=config["max_epochs"],
+        enable_progress_bar=True,
+        num_sanity_val_steps=0,
+        callbacks=callbacks,
+        default_root_dir=log_dir,
+        gradient_clip_val=config.get("gradient_clip_val", None),
+    )
+```
+
+### ModuleNotFoundError: No module named 'pykeops_cpp_a7c1d53916'
+- 原因: 同時に`g++ not found`のエラーが出る場合は、それが原因
+- 対策: `sudo apt install -y build-essential`を実行して、`g++`をインストールする。`g++ vesion`を実行して、表示されればOK。
+```bash
+
+### KeyError: 'nvrtc'
+- 原因: `CPU`で実行しようとしたが、`pykeops`がGPU前提であるため
+- 対策: `unconditional-time-series-diffusion/src/uncond_ts_diff/arch/s4.py`のbackendを`CPU`に変更
+```python
+# 変更前
+r = vandermonde_mult(v, x, l, backend="GPU")
+# 変更後
+device = "GPU" if v.is_cuda else "CPU"
+r = 2 * cauchy_mult(v, z, w, backend=device)
 ```
