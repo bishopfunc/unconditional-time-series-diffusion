@@ -82,3 +82,5 @@ r = vandermonde_mult(v, x, l, backend="GPU")
 device = "GPU" if v.is_cuda else "CPU"
 r = 2 * cauchy_mult(v, z, w, backend=device)
 ```
+もう1ヶ所も同様に変更
+
