@@ -97,13 +97,14 @@ def plot_train_stats(df: pd.DataFrame, y_keys=None, skip_first_epoch=True):
 
 def get_lags_for_freq(freq_str: str):
     offset = to_offset(freq_str)
+    print(f"{offset=}, {offset.n=}, {offset.name=}")
     if offset.n > 1:
         raise NotImplementedError(
             "Lags for freq multiple > 1 are not implemented yet."
         )
-    if offset.name == "H":
+    if offset.name.upper() == "H":
         lags_seq = [24 * i for i in [1, 2, 3, 4, 5, 6, 7, 14, 21, 28]]
-    elif offset.name == "D" or offset.name == "B":
+    elif offset.name.upper() == "D" or offset.name.upper() == "B":
         # TODO: Fix lags for B
         lags_seq = [30 * i for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]]
     else:
