@@ -1,6 +1,10 @@
 ## トラブルシューティング
-### 環境
-個人的には`uv`が一番楽だと思う、他の実行環境でも動くはずなので適宜読み替えてください。
+### 環境構築
+- 個人的には`uv`が一番楽だと思う、他の実行環境でも動くはずなので適宜読み替えほしい
+- M1 Macは`gluonts`内の`mxnet`のパッケージがダウンロードできないため、結構しんどそう
+- 自分はそれがめんどうでLinux環境で実行している
+
+使用環境
 - 仮想環境 `uv`
 - OS: `Ubuntu 24.04`
 
@@ -9,6 +13,11 @@ git clone ...
 uv sync # これ一発でpyproject.tomlの内容を元に仮想環境が作成される
 source .venv/bin/activate # 仮想環境を有効化
 ```
+### error: Distribution mxnet==1.9.1 @ registry+https://pypi.org/simple can't be installed because it doesn't have a source distribution or wheel for the current platform
+hint: You're on macOS (macosx_12_0_arm64), but mxnet (v1.9.1) only has wheels for the following platforms: manylinux2014_aarch64, manylinux2014_x86_64, macosx_10_13_x86_64
+- 前提: `uv sync`実行時に発生
+- 原因: `gluonts`内の`mxnet`がM1 Macに対応していない
+
 
 ### error: distribution `torch==1.13.1 @ registry+https://pypi.org/simple` can't be installed because it doesn't have a source distribution or wheel for the current platform
 - 前提: `python bin/train_model.py -c configs/train_tsdiff/train_uber_tlc.yaml --device cpu`実行時に発生
