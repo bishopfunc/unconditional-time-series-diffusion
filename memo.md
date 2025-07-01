@@ -93,3 +93,13 @@ r = 2 * cauchy_mult(v, z, w, backend=device)
 ```
 もう1ヶ所も同様に変更
 
+
+## 評価コマンド
+```bash
+python bin/guidance_experiment.py -c configs/guidance/guidance_uber_tlc.yaml --ckpt lightning_logs/version_0/best_checkpoint.ckpt
+```
+
+各種指標
+```bash
+2025-07-01 15:54:53,500 - /home/ubuntu/workspace/unconditional-time-series-diffusion/bin/guidance_experiment.py - INFO - Metrics for scenario 'none': {'MSE': 39.297214810155886, 'abs_error': 17125.078073501587, 'abs_target_sum': 82722.0, 'abs_target_mean': 13.155534351145038, 'seasonal_error': 3.986713170745807, 'MASE': 2.4960780407345173, 'MAPE': 0.5443996419231946, 'sMAPE': 0.9332610917379536, 'MSIS': 108.8980959138119, 'QuantileLoss[0.1]': 7593.1158324380485, 'Coverage[0.1]': 0.06504452926208652, 'QuantileLoss[0.2]': 11654.799939769127, 'Coverage[0.2]': 0.16841603053435114, 'QuantileLoss[0.3]': 14420.795004619647, 'Coverage[0.3]': 0.2981870229007634, 'QuantileLoss[0.4]': 16310.57931382019, 'Coverage[0.4]': 0.4193702290076336, 'QuantileLoss[0.5]': 17125.07800353485, 'Coverage[0.5]': 0.5063613231552163, 'QuantileLoss[0.6]': 17304.87530237807, 'Coverage[0.6]': 0.5874681933842238, 'QuantileLoss[0.7]': 16561.642788933226, 'Coverage[0.7]': 0.6765267175572519, 'QuantileLoss[0.8]': 14704.322952762406, 'Coverage[0.8]': 0.7806933842239187, 'QuantileLoss[0.9]': 10543.985448028408, 'Coverage[0.9]': 0.876590330788804, 'RMSE': 6.268749062624527, 'NRMSE': 0.4765104096344748, 'ND': 0.20701963290903977, 'wQuantileLoss[0.1]': 0.0917907670563822, 'wQuantileLoss[0.2]': 0.1408911769513446, 'wQuantileLoss[0.3]': 0.1743284132953706, 'wQuantileLoss[0.4]': 0.1971734159452164, 'wQuantileLoss[0.5]': 0.2070196320632341, 'wQuantileLoss[0.6]': 0.20919314453685925, 'wQuantileLoss[0.7]': 0.20020844260212792, 'wQuantileLoss[0.8]': 0.1777558926617152, 'wQuantileLoss[0.9]': 0.12746289316056683, 'mean_absolute_QuantileLoss': 14024.354954031553, 'mean_wQuantileLoss': 0.16953597536364634, 'MAE_Coverage': 0.38179247950240314, 'OWA': nan}
+```

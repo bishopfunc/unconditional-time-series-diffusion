@@ -1,30 +1,22 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
-import logging
 import argparse
+import logging
 from pathlib import Path
 
-import yaml
 import torch
-from tqdm.auto import tqdm
+import yaml
 from gluonts.dataset.field_names import FieldName
-from gluonts.evaluation import make_evaluation_predictions, Evaluator
+from gluonts.evaluation import Evaluator, make_evaluation_predictions
+from tqdm.auto import tqdm
 
-from uncond_ts_diff.utils import (
-    create_transforms,
-    create_splitter,
-    get_next_file_num,
-    add_config_to_argparser,
-    filter_metrics,
-    MaskInput,
-)
-from uncond_ts_diff.model import TSDiff
-from uncond_ts_diff.dataset import get_gts_dataset
-from uncond_ts_diff.sampler import (
-    DDPMGuidance,
-    DDIMGuidance,
-)
 import uncond_ts_diff.configs as diffusion_configs
+from uncond_ts_diff.dataset import get_gts_dataset
+from uncond_ts_diff.model import TSDiff
+from uncond_ts_diff.sampler import DDIMGuidance, DDPMGuidance
+from uncond_ts_diff.utils import (MaskInput, add_config_to_argparser,
+                                  create_splitter, create_transforms,
+                                  filter_metrics, get_next_file_num)
 
 guidance_map = {"ddpm": DDPMGuidance, "ddim": DDIMGuidance}
 
@@ -115,8 +107,25 @@ def evaluate_guidance(
         )
         forecasts = list(tqdm(forecast_it, total=len(transformed_testdata)))
         tss = list(ts_it)
+        # ======= Plotting forecasts and targets =======
+        import matplotlib.pyplot as plt
+        plt.clf()
+        for i in range(len(forecasts)):
+            forecast_entry = forecasts[i]
+            target_entry = tss[i]
+            plt.plot(forecast_entry.mean, color='r', label='Forecast')
+            plt.plot(target_entry.values, color='b', label='Actual')
+            plt.legend()
+            fig_name = f"forecast_plot_{missing_data_kwargs['missing_scenario']}_{i}.png"
+            plt.savefig(fig_name)
+            logger.info(f"Saved forecast plot to {fig_name}")
+            plt.clf()
+        # ============================================
         evaluator = Evaluator()
         metrics, _ = evaluator(tss, forecasts)
+        logger.info(
+            f"Metrics for scenario '{missing_data_kwargs['missing_scenario']}': {metrics}"
+        )
         metrics = filter_metrics(metrics)
         results.append(dict(**missing_data_kwargs, **metrics))
 
